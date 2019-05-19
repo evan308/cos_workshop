@@ -1,0 +1,121 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+here("data","sub01.log")
+```
+
+```{r}
+#读取数据
+readLines(here("data","sub01.log"))%>%
+  str_detect("RT") %>%
+  which() -> table2_start
+
+readLines(here("data","sub01.log"))%>%
+  str_detect("Subject") %>%
+  which() -> table1_start
+
+table1_end <- table2_start - 2
+table2_end <-  length(readLines(here("data","sub01.log")))
+
+raw_text <- readLines(here("data","sub01.log"))
+
+
+writeLines(raw_text[table1_start:table1_end],
+here("output","sub01_table.txt"))
+```
+
+```{r}
+#读取数据
+readLines(here("data","sub02.log"))%>%
+  str_detect("RT") %>%
+  which() -> table2_start
+
+readLines(here("data","sub02.log"))%>%
+  str_detect("Subject") %>%
+  which() -> table1_start
+
+table1_end <- table2_start - 2
+table2_end <-  length(readLines(here("data","sub02.log")))
+
+raw_text <- readLines(here("data","sub02.log"))
+
+
+writeLines(raw_text[table1_start:table1_end],
+here("output","sub02_table1.txt"))
+
+```
+
+
+```{r}
+convert_logfile <-function(filename,output_name){
+  readLines(here("data",filename))%>%
+  str_detect("RT") %>%
+  which() -> table2_start
+
+readLines(here("data",filename))%>%
+  str_detect("Subject") %>%
+  which() -> table1_start
+
+table1_end <- table2_start - 2
+table2_end <-  length(readLines(here("data",filename)))
+
+raw_text <- readLines(here("data",filename))
+
+
+writeLines(raw_text[table1_start:table1_end],
+here("output",output_name))
+}
+
+
+convert_logfile("sub02.log","table1.txt")
+
+```
+
+```{r}
+#循环
+convert_logfile("sub02.log","sub02_table1.txt")
+
+subs <- c("sub01","sub02")
+
+for (i in subs) {
+  filename <-paste0(i,".log")
+  output_name <-paste0(i,"_table1_new.txt")
+  convert_logfile(filename,output_name)
+}
+
+subs
+
+
+```
+
+```{r}
+#循环
+convert_logfile("sub01.log","sub01_table1.txt")
+
+subs <- c("sub01","sub02")
+
+for (i in subs) {
+  filename <-paste0(i,".log")
+  output_name <-paste0(i,"_table2_new.txt")
+  convert_logfile(filename,output_name)
+}
+
+subs
+
+
+```
+
+
+
+
+
+
+
+
+
+
